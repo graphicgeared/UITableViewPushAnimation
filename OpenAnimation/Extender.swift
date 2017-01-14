@@ -15,17 +15,17 @@ import QuartzCore
 extension UIImage {
     
     static func snapshotOfWindow() -> UIImage {
-        let window = UIApplication.sharedApplication().delegate!.window!!
+        let window = UIApplication.shared.delegate!.window!!
         UIGraphicsBeginImageContextWithOptions(window.bounds.size, true, 0.0)
-        window.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        window.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image
+        return image!
     }
     
     static func crop(source sourceImage: UIImage, frame targetFrame: CGRect) -> UIImage {
-        let frame = CGRectMake(targetFrame.origin.x * sourceImage.scale, targetFrame.origin.y * sourceImage.scale, targetFrame.size.width * sourceImage.scale, targetFrame.size.height * sourceImage.scale)
-        let imageRef = CGImageCreateWithImageInRect(sourceImage.CGImage, frame)!
-        return UIImage(CGImage: imageRef, scale: sourceImage.scale, orientation: sourceImage.imageOrientation)
+        let frame = CGRect(x: targetFrame.origin.x * sourceImage.scale, y: targetFrame.origin.y * sourceImage.scale, width: targetFrame.size.width * sourceImage.scale, height: targetFrame.size.height * sourceImage.scale)
+        let imageRef = sourceImage.cgImage?.cropping(to: frame)!
+        return UIImage(cgImage: imageRef!, scale: sourceImage.scale, orientation: sourceImage.imageOrientation)
     }
 }
